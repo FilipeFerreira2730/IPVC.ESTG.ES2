@@ -1,0 +1,52 @@
+﻿@page "/Codpostals"
+@inject HttpClient Http
+
+<PageTitle>Código Postal</PageTitle>
+
+<h1>Código Postal</h1>
+
+@if (forecasts == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Código Postal</th>
+            <th>Localidade</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var forecast in forecasts)
+        {
+            <tr>
+                <td>@forecast.codpostal1</td>
+                <td>@forecast.localidade</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Codpostal[]? forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await Http.GetFromJsonAsync<Codpostal[]>("http://localhost:5052/api/Codpostals");
+    }
+
+    public class Codpostal
+    {
+        public string codpostal1 { get; set; } = null!;
+    
+        public string localidade { get; set; } = null!;
+        public virtual ICollection<Imovels> Imovels { get; set; } = new List<Imovels>();
+        public virtual ICollection<FetchData.Utilizadors> Utilizadors { get; set; } = new List<FetchData.Utilizadors>();
+    }
+
+}

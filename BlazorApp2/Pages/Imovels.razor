@@ -1,0 +1,75 @@
+﻿@page "/Imovels"
+@using BusinessLogic.Entities
+@inject HttpClient Http
+
+<PageTitle>Imoveis</PageTitle>
+
+<h1>Imoveis</h1>
+
+@if (forecasts == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Valor de renda</th>
+            <th>Valor de condominio</th>
+            <th>Valor estimado</th>
+            <th>Rua</th>
+            <th>Número da porta</th>
+            <th>Código Postal</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var forecast in forecasts)
+        {
+            <tr>
+                <td>@forecast.nome</td>
+                <td>@forecast.valorrenda</td>
+                <td>@forecast.valorcondo</td>
+                <td>@forecast.valoresti</td>
+                <td>@forecast.rua</td>
+                <td>@forecast.nporta</td>
+                <td>@forecast.codpostal</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Imovel[]? forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await Http.GetFromJsonAsync<Imovel[]>("http://localhost:5052/api/Imovels");
+    }
+
+    public class Imovel
+    {
+        public Guid idimovel { get; set; }
+    
+        public string nome { get; set; } = null!;
+    
+        public double valorrenda { get; set; }
+    
+        public double valorcondo { get; set; }
+    
+        public double valoresti { get; set; }
+    
+        public string rua { get; set; } = null!;
+    
+        public string nporta { get; set; } = null!;
+    
+        public string codpostal { get; set; } = null!;
+    
+        public Guid idativofk { get; set; }
+    }
+
+}

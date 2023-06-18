@@ -1,6 +1,8 @@
 using BusinessLogic.Context;
 using Microsoft.EntityFrameworkCore;
 
+var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -15,7 +17,26 @@ builder.Services.AddDbContext<ES2DbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DatabaseConnection"))
 );
 
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5062")
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+});
 var app = builder.Build();
+app.UseCors(MyAllowSpecificOrigins);
+
+app.UseCors(builder =>
+{
+    builder.WithOrigins("http://localhost:5062")
+        .AllowAnyMethod()
+        .AllowAnyHeader();
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

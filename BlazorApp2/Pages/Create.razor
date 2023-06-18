@@ -1,0 +1,82 @@
+﻿@page "/create"
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Components
+@inject HttpClient Http
+@using System.Net.Http
+
+<PageTitle>Create</PageTitle>
+<h1>Create User!</h1>
+
+<EditForm Model="@utilizador" OnValidSubmit="CriarUtilizador">
+    <DataAnnotationsValidator />
+
+    <div class="form-group">
+        <label for="nome">Nome:</label>
+        <InputText id="nome" class="form-control" @bind-Value="utilizador.Nome" />
+        <ValidationMessage For="@(() => utilizador.Nome)" />
+    </div>
+
+    <div class="form-group">
+        <label for="nif">NIF:</label>
+        <InputText id="nif" class="form-control" @bind-Value="utilizador.nif" />
+        <ValidationMessage For="@(() => utilizador.nif)" />
+    </div>
+
+    <div class="form-group">
+        <label for="ncc">NCC:</label>
+        <InputText id="ncc" class="form-control" @bind-Value="utilizador.ncc" />
+        <ValidationMessage For="@(() => utilizador.ncc)" />
+    </div>
+
+    <div class="form-group">
+        <label for="rua">Rua:</label>
+        <InputText id="rua" class="form-control" @bind-Value="utilizador.rua" />
+        <ValidationMessage For="@(() => utilizador.rua)" />
+    </div>
+
+    <div class="form-group">
+        <label for="n_porta">Número da Porta:</label>
+        <InputNumber id="n_porta" class="form-control" @bind-Value="utilizador.n_porta" />
+        <ValidationMessage For="@(() => utilizador.n_porta)" />
+    </div>
+
+    <div class="form-group">
+        <label for="username">Nome de Utilizador:</label>
+        <InputText id="username" class="form-control" @bind-Value="utilizador.username" />
+        <ValidationMessage For="@(() => utilizador.username)" />
+    </div>
+
+    <div class="form-group">
+        <label for="pass">Password:</label>
+        <InputText id="pass" class="form-control" @bind-Value="utilizador.pass" />
+        <ValidationMessage For="@(() => utilizador.pass)" />
+    </div>
+
+    <div class="form-group">
+        <label for="codpostal">Código Postal:</label>
+        <InputText id="codpostal" class="form-control" @bind-Value="utilizador.codpostal" />
+        <ValidationMessage For="@(() => utilizador.codpostal)" />
+    </div>
+
+    <div class="form-group">
+        <label for="tipoutilizador">Tipo de Utilizador:</label>
+        <InputSelect id="tipoutilizador" class="form-control" @bind-Value="utilizador.tipoutilizador">
+            <option value="0">Tipo 0</option>
+            <option value="1">Tipo 1</option>
+            <option value="2">Tipo 2</option>
+        </InputSelect>
+        <ValidationMessage For="@(() => utilizador.tipoutilizador)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Criar</button>
+</EditForm>
+
+@code {
+    private FetchData.Utilizadors utilizador = new FetchData.Utilizadors();
+    private HttpClient httpClient;
+    
+    private async Task CriarUtilizador()
+    {
+        HttpResponseMessage response = await httpClient.PostAsJsonAsync("https://localhost:5052/api/Utilizadors", utilizador);
+    }
+}

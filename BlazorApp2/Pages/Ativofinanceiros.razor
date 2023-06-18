@@ -1,0 +1,66 @@
+﻿@page "/Ativofinanceiros"
+@inject HttpClient Http
+
+<PageTitle>Ativo Financeiro</PageTitle>
+
+<h1>Ativo Financeiro</h1>
+
+@if (forecasts == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Data início</th>
+            <th>Duração</th>
+            <th>Taxa imposto</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var forecast in forecasts)
+        {
+            <tr>
+                <td>@forecast.datainicio</td>
+                <td>@forecast.duracao</td>
+                <td>@forecast.taxaimposto</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Ativofinanceiro[]? forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await Http.GetFromJsonAsync<Ativofinanceiro[]>("http://localhost:5052/api/Ativofinanceiros");
+    }
+
+    public class Ativofinanceiro
+    {
+        public Guid idativo { get; set; }
+    
+        public DateTime datainicio { get; set; }
+    
+        public int duracao { get; set; }
+    
+        public double taxaimposto { get; set; }
+    
+        public Guid idcliente { get; set; }
+    
+        public virtual FetchData.Utilizadors idclienteNavigation { get; set; }
+    
+        public virtual ICollection<Depositos> Depositos { get; set; } = new List<Depositos>();
+    
+        public virtual ICollection<Fundos> Fundos { get; set; } = new List<Fundos>();
+    
+        public virtual ICollection<Imovels> Imovels { get; set; } = new List<Imovels>();
+    }
+
+}

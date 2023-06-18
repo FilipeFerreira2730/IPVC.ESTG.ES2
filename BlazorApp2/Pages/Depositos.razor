@@ -1,0 +1,66 @@
+﻿@page "/Depositos"
+@inject HttpClient Http
+
+<PageTitle>Depositos</PageTitle>
+
+<h1>Depositos</h1>
+
+@if (forecasts == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Banco</th>
+            <th>Titulares</th>
+            <th>Valor</th>
+            <th>Taxa juro</th>
+            <th>Número conta</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var forecast in forecasts)
+        {
+            <tr>
+                <td>@forecast.banco</td>
+                <td>@forecast.titulares</td>
+                <td>@forecast.valor</td>
+                <td>@forecast.taxajuro</td>
+                <td>@forecast.nconta</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Deposito[]? forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await Http.GetFromJsonAsync<Deposito[]>("http://localhost:5052/api/Depositos");
+    }
+
+    public class Deposito
+    {
+        public Guid iddeposito { get; set; }
+    
+        public string banco { get; set; } = null!;
+    
+        public string titulares { get; set; } = null!;
+    
+        public double valor { get; set; }
+    
+        public double taxajuro { get; set; }
+    
+        public string nconta { get; set; } = null!;
+    
+        public Guid idativoFK { get; set; }
+    }
+
+}

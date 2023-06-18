@@ -1,0 +1,59 @@
+﻿@page "/Fundos"
+@inject HttpClient Http
+
+<PageTitle>Fundos</PageTitle>
+
+<h1>Fundos</h1>
+
+@if (forecasts == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Montante</th>
+            <th>Taxa juro</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var forecast in forecasts)
+        {
+            <tr>
+                <td>@forecast.nome</td>
+                <td>@forecast.montante</td>
+                <td>@forecast.taxajuro</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Fundo[]? forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await Http.GetFromJsonAsync<Fundo[]>("http://localhost:5052/api/Fundos");
+    }
+
+    public class Fundo
+    {
+        public Guid idfundo { get; set; }
+    
+        public string nome { get; set; } = null!;
+    
+        public double montante { get; set; }
+    
+        public double taxajuro { get; set; }
+    
+        public Guid idativofk { get; set; }
+        
+    }
+
+}
